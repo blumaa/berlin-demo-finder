@@ -27,20 +27,25 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = createServerClient();
+  let allDemos: Demo[] = [];
+  let lastUpdated = "";
 
-  const allDemos = await paginateQuery<Demo>((from, to) =>
-    supabase
-      .from("demos")
-      .select("*")
-      .order("date", { ascending: true })
-      .order("time_from", { ascending: true })
-      .range(from, to)
-  );
-
-  const lastUpdated = allDemos.reduce((latest, d) => {
-    return d.scraped_at > latest ? d.scraped_at : latest;
-  }, "");
+  try {
+    const supabase = createServerClient();
+    allDemos = await paginateQuery<Demo>((from, to) =>
+      supabase
+        .from("demos")
+        .select("*")
+        .order("date", { ascending: true })
+        .order("time_from", { ascending: true })
+        .range(from, to)
+    );
+    lastUpdated = allDemos.reduce((latest, d) => {
+      return d.scraped_at > latest ? d.scraped_at : latest;
+    }, "");
+  } catch {
+    // Supabase unavailable (e.g. CI build with placeholder env vars)
+  }
 
   return (
     <html lang="en">

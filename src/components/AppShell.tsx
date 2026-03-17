@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useRef, useEffect, useCallback } from "react";
+import { Suspense, useMemo, useState, useRef, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { Demo, TopicCategory, EventType, CATEGORY_CONFIG, ALL_CATEGORIES, CATEGORY_TRANSLATION_KEYS } from "@/lib/types";
 import { MapPageClient } from "@/components/map/MapPageClient";
@@ -60,7 +60,9 @@ function AppShellInner({ allDemos, lastUpdated }: AppShellProps) {
         <MapPageClient demos={mapDemos} />
       </div>
       <div className={isAnalytics ? "contents" : "hidden"}>
-        <AnalyticsDashboard demos={allDemos} />
+        <Suspense>
+          <AnalyticsDashboard demos={allDemos} />
+        </Suspense>
       </div>
     </>
   );
