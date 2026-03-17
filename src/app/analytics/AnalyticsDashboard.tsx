@@ -73,30 +73,30 @@ export function AnalyticsDashboard({ demos }: AnalyticsDashboardProps) {
       </div>
 
       <div className="grid gap-3 md:gap-4 md:grid-cols-2">
-        <Suspense fallback={<ChartSkeleton height={200} type="card" />}>
+        <Suspense fallback={<ChartSkeleton heightClass="h-[200px]" type="card" />}>
           <WeeklySummaryCard summary={weeklySummary} />
         </Suspense>
 
-        <Suspense fallback={<ChartSkeleton height={200} type="heatmap" />}>
+        <Suspense fallback={<ChartSkeleton heightClass="h-[200px]" type="heatmap" />}>
           <PeakHoursGrid data={peakHours} />
         </Suspense>
 
         <div className="md:col-span-2">
-          <Suspense fallback={<ChartSkeleton height={300} type="area" />}>
+          <Suspense fallback={<ChartSkeleton heightClass="h-[300px]" type="area" />}>
             <TopicTrendsChart data={topicTrends} />
           </Suspense>
         </div>
 
-        <Suspense fallback={<ChartSkeleton height={300} type="heatmap" />}>
+        <Suspense fallback={<ChartSkeleton heightClass="h-[300px]" type="heatmap" />}>
           <SurgeDetectionMap data={surgeData} />
         </Suspense>
 
-        <Suspense fallback={<ChartSkeleton height={350} type="bar" />}>
+        <Suspense fallback={<ChartSkeleton heightClass="h-[350px]" type="bar" />}>
           <DemosByPlzChart data={demosByPlz} />
         </Suspense>
 
         <div className="md:col-span-2">
-          <Suspense fallback={<ChartSkeleton height={350} type="bar" />}>
+          <Suspense fallback={<ChartSkeleton heightClass="h-[350px]" type="bar" />}>
             <RepeatLocationsChart data={repeatLocations} />
           </Suspense>
         </div>

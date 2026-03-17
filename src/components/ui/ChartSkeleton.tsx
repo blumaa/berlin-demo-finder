@@ -1,13 +1,14 @@
 interface ChartSkeletonProps {
-  height?: number;
+  heightClass?: string;
   type?: "bar" | "area" | "heatmap" | "card";
 }
 
-export function ChartSkeleton({ height = 300, type = "bar" }: ChartSkeletonProps) {
+const BAR_HEIGHTS = ["h-2/3", "h-2/5", "h-4/5", "h-1/2", "h-1/3", "h-3/4", "h-2/5", "h-[90%]"];
+
+export function ChartSkeleton({ heightClass = "h-[300px]", type = "bar" }: ChartSkeletonProps) {
   return (
     <div
-      className="animate-pulse rounded-lg bg-gray-100 p-4"
-      style={{ height }}
+      className={`animate-pulse rounded-lg bg-gray-100 p-4 ${heightClass}`}
     >
       <div className="h-4 w-1/3 rounded bg-gray-200 mb-4" />
       {type === "card" ? (
@@ -24,12 +25,8 @@ export function ChartSkeleton({ height = 300, type = "bar" }: ChartSkeletonProps
         </div>
       ) : (
         <div className="flex items-end gap-2 mt-8 h-2/3">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="flex-1 rounded-t bg-gray-200"
-              style={{ height: `${30 + Math.random() * 60}%` }}
-            />
+          {BAR_HEIGHTS.map((h, i) => (
+            <div key={i} className={`flex-1 rounded-t bg-gray-200 ${h}`} />
           ))}
         </div>
       )}
