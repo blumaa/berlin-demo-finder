@@ -58,6 +58,8 @@ const hu = {
   "days.sun": "Vas",
 
   "nav.language": "Nyelv",
+  "nav.today": "Ma",
+  "nav.thisWeek": "E hét",
 } satisfies Dictionary;
 
 export default hu;

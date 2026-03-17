@@ -58,6 +58,8 @@ const tr = {
   "days.sun": "Paz",
 
   "nav.language": "Dil",
+  "nav.today": "Bugün",
+  "nav.thisWeek": "Bu Hafta",
 } satisfies Dictionary;
 
 export default tr;

@@ -58,6 +58,8 @@ const uk = {
   "days.sun": "Нд",
 
   "nav.language": "Мова",
+  "nav.today": "Сьогодні",
+  "nav.thisWeek": "Цей тиждень",
 } satisfies Dictionary;
 
 export default uk;

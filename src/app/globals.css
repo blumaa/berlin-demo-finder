@@ -27,6 +27,7 @@ body {
   color: var(--foreground);
 }
 
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -27,7 +27,7 @@ export function AppShell({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
   );
 }
 
-function AppShellInner({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
+function AppShellInner({ allDemos, cutoffDate }: AppShellProps) {
   const pathname = usePathname();
   const isAnalytics = pathname === "/analytics";
   const { locale, setLocale, t } = useTranslation();
@@ -42,7 +42,7 @@ function AppShellInner({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
 
   return (
     <>
-      <Nav lastUpdated={lastUpdated} locale={locale}>
+      <Nav>
         {/* Language picker */}
         <LanguagePicker locale={locale} setLocale={setLocale} />
 
@@ -100,7 +100,10 @@ function LanguagePicker({
         className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors focus-visible:ring-2 focus-visible:ring-blue-600"
       >
         <GlobeIcon />
-        <span className="text-xs font-medium text-gray-700">{LOCALE_NAMES[locale]}</span>
+        <span className="text-xs font-medium text-gray-700">
+          <span className="md:hidden">{locale.toUpperCase()}</span>
+          <span className="hidden md:inline">{LOCALE_NAMES[locale]}</span>
+        </span>
         <ChevronUpIcon size={10} className={`text-gray-400 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 

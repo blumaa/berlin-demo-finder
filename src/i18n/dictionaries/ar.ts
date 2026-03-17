@@ -58,6 +58,8 @@ const ar = {
   "days.sun": "الأحد",
 
   "nav.language": "اللغة",
+  "nav.today": "اليوم",
+  "nav.thisWeek": "هذا الأسبوع",
 } satisfies Dictionary;
 
 export default ar;

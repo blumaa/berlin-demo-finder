@@ -58,6 +58,8 @@ const vi = {
   "days.sun": "CN",
 
   "nav.language": "Ngôn ngữ",
+  "nav.today": "Hôm nay",
+  "nav.thisWeek": "Tuần này",
 } satisfies Dictionary;
 
 export default vi;

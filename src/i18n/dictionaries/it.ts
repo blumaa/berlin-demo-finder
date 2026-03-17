@@ -58,6 +58,8 @@ const it = {
   "days.sun": "Dom",
 
   "nav.language": "Lingua",
+  "nav.today": "Oggi",
+  "nav.thisWeek": "Questa settimana",
 } satisfies Dictionary;
 
 export default it;

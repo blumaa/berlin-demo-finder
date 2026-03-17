@@ -99,6 +99,8 @@ export type TranslationKey =
   | "days.fri"
   | "days.sat"
   | "days.sun"
-  | "nav.language";
+  | "nav.language"
+  | "nav.today"
+  | "nav.thisWeek";
 
 export type Dictionary = Record<TranslationKey, string>;

@@ -58,6 +58,8 @@ const de = {
   "days.sun": "So",
 
   "nav.language": "Sprache",
+  "nav.today": "Heute",
+  "nav.thisWeek": "Diese Woche",
 } satisfies Dictionary;
 
 export default de;
