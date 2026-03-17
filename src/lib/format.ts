@@ -18,9 +18,9 @@ export function formatTime(from: string, to: string | null): string {
   return f;
 }
 
-export function formatLastUpdated(iso: string): string {
+export function formatLastUpdated(iso: string, locale: string = "en"): string {
   const date = new Date(iso);
-  return date.toLocaleString(undefined, {
+  return date.toLocaleString(locale, {
     month: "short",
     day: "numeric",
     hour: "2-digit",

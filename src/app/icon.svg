@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Berlin bear silhouette -->
+  <rect width="32" height="32" rx="6" fill="#1f2937"/>
+  <!-- Bear head -->
+  <circle cx="16" cy="12" r="7" fill="white"/>
+  <!-- Ears -->
+  <circle cx="10" cy="6" r="3" fill="white"/>
+  <circle cx="22" cy="6" r="3" fill="white"/>
+  <circle cx="10" cy="6" r="1.5" fill="#1f2937"/>
+  <circle cx="22" cy="6" r="1.5" fill="#1f2937"/>
+  <!-- Eyes -->
+  <circle cx="13.5" cy="11" r="1.2" fill="#1f2937"/>
+  <circle cx="18.5" cy="11" r="1.2" fill="#1f2937"/>
+  <!-- Nose -->
+  <ellipse cx="16" cy="14" rx="2" ry="1.5" fill="#1f2937"/>
+  <!-- Body -->
+  <ellipse cx="16" cy="24" rx="6" ry="6" fill="white"/>
+  <!-- Paws -->
+  <circle cx="11" cy="28" r="2" fill="white"/>
+  <circle cx="21" cy="28" r="2" fill="white"/>
+</svg>

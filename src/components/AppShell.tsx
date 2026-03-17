@@ -48,7 +48,7 @@ function AppShellInner({ allDemos, lastUpdated }: AppShellProps) {
 
   return (
     <>
-      <Nav lastUpdated={lastUpdated}>
+      <Nav lastUpdated={lastUpdated} locale={locale}>
         {/* Language picker */}
         <LanguagePicker locale={locale} setLocale={setLocale} />
 
