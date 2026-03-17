@@ -18,12 +18,17 @@ export function formatTime(from: string, to: string | null): string {
   return f;
 }
 
-export function formatLastUpdated(iso: string, locale: string = "en"): string {
+const MONTH_NAMES_SHORT: Record<string, string[]> = {
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  de: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+};
+
+export function formatLastUpdated(iso: string, _locale: string = "en"): string {
   const date = new Date(iso);
-  return date.toLocaleString(locale, {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const months = MONTH_NAMES_SHORT["en"];
+  const month = months[date.getUTCMonth()];
+  const day = date.getUTCDate();
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  return `${month} ${day}, ${hours}:${minutes} UTC`;
 }

@@ -14,25 +14,20 @@ import { GlobeIcon, ChevronUpIcon, LayersIcon } from "@/components/ui/icons";
 interface AppShellProps {
   allDemos: Demo[];
   lastUpdated?: string;
+  cutoffDate: string;
 }
 
-function getCutoffDate(): string {
-  const d = new Date();
-  d.setDate(d.getDate() - 7);
-  return d.toISOString().split("T")[0];
-}
-
-export function AppShell({ allDemos, lastUpdated }: AppShellProps) {
+export function AppShell({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
   return (
     <LanguageProvider>
       <FilterProvider>
-        <AppShellInner allDemos={allDemos} lastUpdated={lastUpdated} />
+        <AppShellInner allDemos={allDemos} lastUpdated={lastUpdated} cutoffDate={cutoffDate} />
       </FilterProvider>
     </LanguageProvider>
   );
 }
 
-function AppShellInner({ allDemos, lastUpdated }: AppShellProps) {
+function AppShellInner({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
   const pathname = usePathname();
   const isAnalytics = pathname === "/analytics";
   const { locale, setLocale, t } = useTranslation();
@@ -40,9 +35,8 @@ function AppShellInner({ allDemos, lastUpdated }: AppShellProps) {
   const { toggleCategory, toggleEventType } = useFilterActions();
 
   const mapDemos = useMemo(() => {
-    const cutoff = getCutoffDate();
-    return allDemos.filter((d) => d.date >= cutoff);
-  }, [allDemos]);
+    return allDemos.filter((d) => d.date >= cutoffDate);
+  }, [allDemos, cutoffDate]);
 
   const filterCount = categories.length + eventTypes.length;
 

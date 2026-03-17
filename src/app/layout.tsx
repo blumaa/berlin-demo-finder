@@ -47,12 +47,19 @@ export default async function RootLayout({
     // Supabase unavailable (e.g. CI build with placeholder env vars)
   }
 
+  // Compute cutoff date on server to avoid hydration mismatch from timezone differences
+  const cutoffDate = (() => {
+    const d = new Date();
+    d.setUTCDate(d.getUTCDate() - 7);
+    return d.toISOString().split("T")[0];
+  })();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <AppShell allDemos={allDemos} lastUpdated={lastUpdated} />
+        <AppShell allDemos={allDemos} lastUpdated={lastUpdated} cutoffDate={cutoffDate} />
         {/* children kept for Next.js routing — pages return null */}
         <div className="hidden">{children}</div>
       </body>
