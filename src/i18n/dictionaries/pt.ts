@@ -1,0 +1,63 @@
+import type { Dictionary } from "../types";
+
+const pt = {
+  "filters.title": "Filtros",
+  "filters.from": "De",
+  "filters.to": "Até",
+  "filters.keyword": "Palavra-chave",
+  "filters.keywordPlaceholder": "Pesquisar...",
+  "filters.plz": "Código postal",
+  "filters.results": "resultados",
+  "filters.clearAll": "Limpar tudo",
+
+  "legend.label": "Legenda",
+  "legend.type": "Tipo",
+  "legend.category": "Categoria",
+  "legend.march": "Marcha",
+  "legend.rally": "Concentração",
+
+  "popover.close": "Fechar",
+  "popover.route": "Rota",
+  "popover.share": "Partilhar",
+  "popover.copied": "Copiado!",
+  "popover.maps": "Mapa",
+
+  "analytics.title": "Análise",
+  "analytics.weeklyPulse": "Resumo semanal",
+  "analytics.thisWeek": "esta semana",
+  "analytics.topTopics": "Temas principais",
+  "analytics.day": "Dia",
+  "analytics.peakHours": "Horas de ponta",
+  "analytics.topicTrends": "Tendências temáticas",
+  "analytics.surgeTitle": "Picos de atividade por código postal",
+  "analytics.surgeLabel.surging": "em forte aumento",
+  "analytics.surgeLabel.moreActive": "mais ativo",
+  "analytics.surgeLabel.normal": "normal",
+  "analytics.surgeLabel.quieter": "mais calmo",
+  "analytics.surgeLabel.busier": "mais ativo",
+  "analytics.demosByPlz": "Manifestações por código postal (Top 20)",
+  "analytics.repeatLocations": "Locais de reunião mais frequentes",
+  "analytics.low": "pouco",
+  "analytics.high": "muito",
+
+  "category.Housing": "Habitação",
+  "category.Climate": "Clima",
+  "category.InternationalSolidarity": "Solidariedade internacional",
+  "category.AntiFascism": "Antifascismo",
+  "category.Labor": "Trabalho",
+  "category.Commemoration": "Comemoração",
+  "category.GenderLGBTQ": "Gênero & LGBTQ+",
+  "category.Other": "Outros",
+
+  "days.mon": "Seg",
+  "days.tue": "Ter",
+  "days.wed": "Qua",
+  "days.thu": "Qui",
+  "days.fri": "Sex",
+  "days.sat": "Sáb",
+  "days.sun": "Dom",
+
+  "nav.language": "Idioma",
+} satisfies Dictionary;
+
+export default pt;

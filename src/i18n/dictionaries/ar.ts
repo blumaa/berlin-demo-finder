@@ -1,0 +1,63 @@
+import type { Dictionary } from "../types";
+
+const ar = {
+  "filters.title": "التصفية",
+  "filters.from": "من",
+  "filters.to": "إلى",
+  "filters.keyword": "كلمة مفتاحية",
+  "filters.keywordPlaceholder": "بحث...",
+  "filters.plz": "الرمز البريدي",
+  "filters.results": "نتائج",
+  "filters.clearAll": "مسح الكل",
+
+  "legend.label": "وسيلة الإيضاح",
+  "legend.type": "النوع",
+  "legend.category": "الفئة",
+  "legend.march": "مسيرة",
+  "legend.rally": "تجمع",
+
+  "popover.close": "إغلاق",
+  "popover.route": "المسار",
+  "popover.share": "مشاركة",
+  "popover.copied": "تم النسخ!",
+  "popover.maps": "الخريطة",
+
+  "analytics.title": "التحليلات",
+  "analytics.weeklyPulse": "نبض الأسبوع",
+  "analytics.thisWeek": "هذا الأسبوع",
+  "analytics.topTopics": "أبرز المواضيع",
+  "analytics.day": "اليوم",
+  "analytics.peakHours": "ساعات الذروة",
+  "analytics.topicTrends": "اتجاهات المواضيع",
+  "analytics.surgeTitle": "الارتفاعات حسب الرمز البريدي",
+  "analytics.surgeLabel.surging": "ارتفاع حاد",
+  "analytics.surgeLabel.moreActive": "أكثر نشاطاً",
+  "analytics.surgeLabel.normal": "عادي",
+  "analytics.surgeLabel.quieter": "أهدأ",
+  "analytics.surgeLabel.busier": "أكثر نشاطاً",
+  "analytics.demosByPlz": "المظاهرات حسب الرمز البريدي (أعلى 20)",
+  "analytics.repeatLocations": "أكثر أماكن التجمع تكراراً",
+  "analytics.low": "قليل",
+  "analytics.high": "كثير",
+
+  "category.Housing": "الإسكان",
+  "category.Climate": "المناخ",
+  "category.InternationalSolidarity": "التضامن الدولي",
+  "category.AntiFascism": "مناهضة الفاشية",
+  "category.Labor": "العمل",
+  "category.Commemoration": "الإحياء",
+  "category.GenderLGBTQ": "النوع الاجتماعي ومجتمع الميم",
+  "category.Other": "أخرى",
+
+  "days.mon": "الإثنين",
+  "days.tue": "الثلاثاء",
+  "days.wed": "الأربعاء",
+  "days.thu": "الخميس",
+  "days.fri": "الجمعة",
+  "days.sat": "السبت",
+  "days.sun": "الأحد",
+
+  "nav.language": "اللغة",
+} satisfies Dictionary;
+
+export default ar;

@@ -1,0 +1,63 @@
+import type { Dictionary } from "../types";
+
+const pl = {
+  "filters.title": "Filtry",
+  "filters.from": "Od",
+  "filters.to": "Do",
+  "filters.keyword": "Słowo kluczowe",
+  "filters.keywordPlaceholder": "Szukaj...",
+  "filters.plz": "Kod pocztowy",
+  "filters.results": "wyników",
+  "filters.clearAll": "Wyczyść wszystko",
+
+  "legend.label": "Legenda",
+  "legend.type": "Typ",
+  "legend.category": "Kategoria",
+  "legend.march": "Marsz",
+  "legend.rally": "Zgromadzenie",
+
+  "popover.close": "Zamknij",
+  "popover.route": "Trasa",
+  "popover.share": "Udostępnij",
+  "popover.copied": "Skopiowano!",
+  "popover.maps": "Mapa",
+
+  "analytics.title": "Analiza",
+  "analytics.weeklyPulse": "Podsumowanie tygodnia",
+  "analytics.thisWeek": "ten tydzień",
+  "analytics.topTopics": "Główne tematy",
+  "analytics.day": "Dzień",
+  "analytics.peakHours": "Godziny szczytu",
+  "analytics.topicTrends": "Trendy tematyczne",
+  "analytics.surgeTitle": "Wzrosty aktywności wg kodu pocztowego",
+  "analytics.surgeLabel.surging": "gwałtowny wzrost",
+  "analytics.surgeLabel.moreActive": "bardziej aktywny",
+  "analytics.surgeLabel.normal": "normalny",
+  "analytics.surgeLabel.quieter": "spokojniejszy",
+  "analytics.surgeLabel.busier": "bardziej aktywny",
+  "analytics.demosByPlz": "Demonstracje wg kodu pocztowego (Top 20)",
+  "analytics.repeatLocations": "Najczęstsze miejsca zgromadzeń",
+  "analytics.low": "mało",
+  "analytics.high": "dużo",
+
+  "category.Housing": "Mieszkalnictwo",
+  "category.Climate": "Klimat",
+  "category.InternationalSolidarity": "Solidarność międzynarodowa",
+  "category.AntiFascism": "Antyfaszyzm",
+  "category.Labor": "Praca",
+  "category.Commemoration": "Upamiętnienie",
+  "category.GenderLGBTQ": "Płeć i LGBTQ+",
+  "category.Other": "Inne",
+
+  "days.mon": "Pon",
+  "days.tue": "Wt",
+  "days.wed": "Śr",
+  "days.thu": "Czw",
+  "days.fri": "Pt",
+  "days.sat": "Sob",
+  "days.sun": "Ndz",
+
+  "nav.language": "Język",
+} satisfies Dictionary;
+
+export default pl;

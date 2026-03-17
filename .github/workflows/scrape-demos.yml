@@ -1,0 +1,21 @@
+name: Scrape Berlin Demos
+
+on:
+  schedule:
+    - cron: '0 4 * * *'  # 4am UTC ≈ 6am Berlin
+  workflow_dispatch: {}
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger scrape endpoint
+        run: |
+          curl -f -X POST "${{ secrets.SCRAPE_API_URL }}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"
+      - name: Backfill translations
+        run: |
+          curl -f -X POST "${{ secrets.APP_BASE_URL }}/api/translate-backfill" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"

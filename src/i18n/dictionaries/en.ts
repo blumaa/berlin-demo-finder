@@ -1,0 +1,63 @@
+import type { Dictionary } from "../types";
+
+const en = {
+  "filters.title": "Filters",
+  "filters.from": "From",
+  "filters.to": "To",
+  "filters.keyword": "Keyword",
+  "filters.keywordPlaceholder": "Search...",
+  "filters.plz": "PLZ",
+  "filters.results": "results",
+  "filters.clearAll": "Clear all",
+
+  "legend.label": "Legend",
+  "legend.type": "Type",
+  "legend.category": "Category",
+  "legend.march": "March",
+  "legend.rally": "Rally",
+
+  "popover.close": "Close",
+  "popover.route": "Route",
+  "popover.share": "Share",
+  "popover.copied": "Copied!",
+  "popover.maps": "Maps",
+
+  "analytics.title": "Analytics",
+  "analytics.weeklyPulse": "Weekly Pulse",
+  "analytics.thisWeek": "this week",
+  "analytics.topTopics": "Top Topics",
+  "analytics.day": "Day",
+  "analytics.peakHours": "Peak Hours",
+  "analytics.topicTrends": "Topic Trends",
+  "analytics.surgeTitle": "Activity Surges by PLZ",
+  "analytics.surgeLabel.surging": "surging",
+  "analytics.surgeLabel.moreActive": "more active",
+  "analytics.surgeLabel.normal": "normal",
+  "analytics.surgeLabel.quieter": "quieter",
+  "analytics.surgeLabel.busier": "busier",
+  "analytics.demosByPlz": "Demos by PLZ (Top 20)",
+  "analytics.repeatLocations": "Most Frequent Assembly Locations",
+  "analytics.low": "low",
+  "analytics.high": "high",
+
+  "category.Housing": "Housing",
+  "category.Climate": "Climate",
+  "category.InternationalSolidarity": "Intl Solidarity",
+  "category.AntiFascism": "Anti-Fascism",
+  "category.Labor": "Labor",
+  "category.Commemoration": "Commemoration",
+  "category.GenderLGBTQ": "Gender & LGBTQ+",
+  "category.Other": "Other",
+
+  "days.mon": "Mon",
+  "days.tue": "Tue",
+  "days.wed": "Wed",
+  "days.thu": "Thu",
+  "days.fri": "Fri",
+  "days.sat": "Sat",
+  "days.sun": "Sun",
+
+  "nav.language": "Language",
+} satisfies Dictionary;
+
+export default en;
