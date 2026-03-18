@@ -5,6 +5,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/AppShell";
 import { Demo } from "@/lib/types";
 import { paginateQuery } from "@/lib/supabase/paginateQuery";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,6 +63,7 @@ export default async function RootLayout({
         <AppShell allDemos={allDemos} lastUpdated={lastUpdated} cutoffDate={cutoffDate} />
         {/* children kept for Next.js routing — pages return null */}
         <div className="hidden">{children}</div>
+        <Analytics />
       </body>
     </html>
   );
