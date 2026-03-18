@@ -6,6 +6,7 @@ import { useFilterState, useFilterActions } from "@/contexts/FilterContext";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { getToday, getWeekRange } from "@/lib/datePresets";
 
+
 interface NavProps {
   children?: ReactNode;
 }
@@ -70,16 +71,13 @@ export function Nav({ children }: NavProps) {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/[0.97] border-b border-gray-200">
-        <div className="flex items-center justify-between h-11 px-3 md:px-1 md:h-12">
-          <Link href="/" className="font-semibold text-gray-900 text-sm leading-none whitespace-nowrap">
+        <div className="flex items-center justify-between h-11 px-3 md:px-6 md:h-12">
+          <Link href="/" className="flex items-center gap-1.5 font-semibold text-gray-900 text-sm leading-none whitespace-nowrap">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icon.svg" alt="" className="w-4 h-6 shrink-0" aria-hidden="true" />
             Berlin Demo Finder
           </Link>
           <div className="flex items-center gap-1.5">
-            {/* Desktop only: pills in nav */}
-            <div className="hidden md:flex items-center gap-1.5">
-              {todayButton(isTodayActive)}
-              {weekButton(isWeekActive)}
-            </div>
             {children}
           </div>
         </div>

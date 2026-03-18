@@ -30,6 +30,7 @@ export function AppShell({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
 function AppShellInner({ allDemos, cutoffDate }: AppShellProps) {
   const pathname = usePathname();
   const isAnalytics = pathname === "/analytics";
+  const isLogo = pathname === "/logo";
   const { locale, setLocale, t } = useTranslation();
   const { categories, eventTypes } = useFilterState();
   const { toggleCategory, toggleEventType } = useFilterActions();
@@ -50,14 +51,19 @@ function AppShellInner({ allDemos, cutoffDate }: AppShellProps) {
         {!isAnalytics && <LegendDropdown t={t} filterCount={filterCount} categories={categories} eventTypes={eventTypes} toggleCategory={toggleCategory} toggleEventType={toggleEventType} />}
       </Nav>
 
-      <div className={isAnalytics ? "hidden" : "contents"}>
+      <div className={isAnalytics || isLogo ? "hidden" : "contents"}>
         <MapPageClient demos={mapDemos} />
       </div>
-      <div className={isAnalytics ? "contents" : "hidden"}>
+      <div className={isAnalytics && !isLogo ? "contents" : "hidden"}>
         <Suspense>
           <AnalyticsDashboard demos={allDemos} />
         </Suspense>
       </div>
+      {isLogo && (
+        <div className="flex items-center justify-center min-h-screen pt-12">
+          <img src="/icon.svg" alt="Berlin Demo Finder logo" className="w-64 h-auto" />
+        </div>
+      )}
     </>
   );
 }

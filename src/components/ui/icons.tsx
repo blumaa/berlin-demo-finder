@@ -3,6 +3,7 @@ interface IconProps {
   className?: string;
 }
 
+
 export function FilterIcon({ size = 16, className = "text-gray-700" }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className}>

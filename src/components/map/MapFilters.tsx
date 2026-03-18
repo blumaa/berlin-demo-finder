@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { ALL_CATEGORIES } from "@/lib/types";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { useFilterState, useFilterActions } from "@/contexts/FilterContext";
 import { FilterFormFields } from "./FilterFormFields";
 import { FilterIcon, ChevronUpIcon } from "@/components/ui/icons";
+import { getToday, getWeekRange } from "@/lib/datePresets";
 
 interface MapFiltersProps {
   onExpand: () => void;
@@ -29,6 +30,21 @@ export function MapFilters({ onExpand, demoCount }: MapFiltersProps) {
   const allSelected = categories.length === ALL_CATEGORIES.length;
   const [expanded, setExpanded] = useState(false);
   const [desktopExpanded, setDesktopExpanded] = useState(false);
+
+  const today = useMemo(() => getToday(), []);
+  const week = useMemo(() => getWeekRange(), []);
+  const isTodayActive = dateFrom === today && dateTo === today;
+  const isWeekActive = dateFrom === week.from && dateTo === week.to;
+
+  const handleToday = useCallback(() => {
+    if (isTodayActive) { setDateFrom(""); setDateTo(""); }
+    else { setDateFrom(today); setDateTo(today); }
+  }, [isTodayActive, today, setDateFrom, setDateTo]);
+
+  const handleWeek = useCallback(() => {
+    if (isWeekActive) { setDateFrom(""); setDateTo(""); }
+    else { setDateFrom(week.from); setDateTo(week.to); }
+  }, [isWeekActive, week, setDateFrom, setDateTo]);
 
   const activeFilterCount =
     (dateFrom ? 1 : 0) +
@@ -106,25 +122,47 @@ export function MapFilters({ onExpand, demoCount }: MapFiltersProps) {
 
       {/* Desktop: collapsible floating panel */}
       <div className="hidden md:block absolute top-16 start-4 z-10">
-        <button
-          onClick={() => {
-            const next = !desktopExpanded;
-            setDesktopExpanded(next);
-            if (next) onExpand();
-          }}
-          aria-expanded={desktopExpanded}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.97] border border-gray-200 shadow-lg hover:bg-white transition-colors focus-visible:ring-2 focus-visible:ring-blue-600"
-        >
-          <FilterIcon />
-          <span className="text-sm font-medium text-gray-900">{t("filters.title")}</span>
-          <span className="text-xs text-gray-500">{demoCount}</span>
-          {activeFilterCount > 0 && (
-            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-900 text-white text-[10px] font-bold">
-              {activeFilterCount}
-            </span>
-          )}
-          <ChevronUpIcon size={12} className={`text-gray-400 transition-transform ${desktopExpanded ? "rotate-180" : ""}`} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              const next = !desktopExpanded;
+              setDesktopExpanded(next);
+              if (next) onExpand();
+            }}
+            aria-expanded={desktopExpanded}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.97] border border-gray-200 shadow-lg hover:bg-white transition-colors focus-visible:ring-2 focus-visible:ring-blue-600"
+          >
+            <FilterIcon />
+            <span className="text-sm font-medium text-gray-900">{t("filters.title")}</span>
+            <span className="text-xs text-gray-500">{demoCount}</span>
+            {activeFilterCount > 0 && (
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-900 text-white text-[10px] font-bold">
+                {activeFilterCount}
+              </span>
+            )}
+            <ChevronUpIcon size={12} className={`text-gray-400 transition-transform ${desktopExpanded ? "rotate-180" : ""}`} />
+          </button>
+          <button
+            onClick={handleToday}
+            className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors shadow-sm ${
+              isTodayActive
+                ? "bg-gray-900 text-white"
+                : "bg-white border border-gray-300 text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            {t("nav.today")}
+          </button>
+          <button
+            onClick={handleWeek}
+            className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors shadow-sm ${
+              isWeekActive
+                ? "bg-gray-900 text-white"
+                : "bg-white border border-gray-300 text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            {t("nav.thisWeek")}
+          </button>
+        </div>
 
         {desktopExpanded && (
           <div className="mt-1.5 w-80 rounded-lg bg-white/[0.97] border border-gray-200 shadow-lg p-4">
