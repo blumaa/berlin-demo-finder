@@ -1,31 +1,29 @@
 import { translateTexts } from "@/lib/translation/translate";
 
-// Mock global fetch
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
 describe("translateTexts", () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    process.env.GOOGLE_CLOUD_TRANSLATION_API_KEY = "test-api-key";
-  });
-
-  afterEach(() => {
-    delete process.env.GOOGLE_CLOUD_TRANSLATION_API_KEY;
   });
 
   it("returns translated texts on success", async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        data: {
-          translations: [
-            { translatedText: "Housing protest" },
-            { translatedText: "Climate march" },
-          ],
-        },
-      }),
-    });
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          responseData: { translatedText: "Housing protest" },
+          responseStatus: 200,
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          responseData: { translatedText: "Climate march" },
+          responseStatus: 200,
+        }),
+      });
 
     const result = await translateTexts(
       ["Wohnungsprotest", "Klimamarsch"],
@@ -33,16 +31,12 @@ describe("translateTexts", () => {
     );
 
     expect(result).toEqual(["Housing protest", "Climate march"]);
-    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledTimes(2);
 
-    const [url, options] = mockFetch.mock.calls[0];
-    expect(url).toContain("translate/v2");
-    expect(url).toContain("key=test-api-key");
-
-    const body = JSON.parse(options.body);
-    expect(body.q).toEqual(["Wohnungsprotest", "Klimamarsch"]);
-    expect(body.target).toBe("en");
-    expect(body.source).toBe("de");
+    const url = mockFetch.mock.calls[0][0];
+    expect(url).toContain("api.mymemory.translated.net");
+    expect(url).toContain("langpair=de%7Cen");
+    expect(url).toContain("q=Wohnungsprotest");
   });
 
   it("returns original texts on API failure", async () => {
@@ -63,17 +57,58 @@ describe("translateTexts", () => {
     expect(result).toEqual(["Wohnungsprotest"]);
   });
 
-  it("returns original texts when API key is missing", async () => {
-    delete process.env.GOOGLE_CLOUD_TRANSLATION_API_KEY;
-
-    const result = await translateTexts(["Wohnungsprotest"], "en");
-    expect(result).toEqual(["Wohnungsprotest"]);
-    expect(mockFetch).not.toHaveBeenCalled();
-  });
-
   it("returns empty array for empty input", async () => {
     const result = await translateTexts([], "en");
     expect(result).toEqual([]);
     expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("includes email parameter when MYMEMORY_EMAIL is set", async () => {
+    process.env.MYMEMORY_EMAIL = "test@example.com";
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        responseData: { translatedText: "Housing protest" },
+        responseStatus: 200,
+      }),
+    });
+
+    await translateTexts(["Wohnungsprotest"], "en");
+
+    const url = mockFetch.mock.calls[0][0];
+    expect(url).toContain("de=test%40example.com");
+
+    delete process.env.MYMEMORY_EMAIL;
+  });
+
+  it("does not include email parameter when MYMEMORY_EMAIL is not set", async () => {
+    delete process.env.MYMEMORY_EMAIL;
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        responseData: { translatedText: "Housing protest" },
+        responseStatus: 200,
+      }),
+    });
+
+    await translateTexts(["Wohnungsprotest"], "en");
+
+    const url = mockFetch.mock.calls[0][0];
+    expect(url).not.toContain("de=");
+  });
+
+  it("returns original text when responseStatus is not 200", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        responseData: { translatedText: "" },
+        responseStatus: 403,
+      }),
+    });
+
+    const result = await translateTexts(["Wohnungsprotest"], "en");
+    expect(result).toEqual(["Wohnungsprotest"]);
   });
 });

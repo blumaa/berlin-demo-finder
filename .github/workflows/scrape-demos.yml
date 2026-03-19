@@ -2,7 +2,7 @@ name: Scrape Berlin Demos
 
 on:
   schedule:
-    - cron: '0 4 * * *'  # 4am UTC ≈ 6am Berlin
+    - cron: '0 4 * * 1,4'  # 4am UTC Mon & Thu ≈ 6am Berlin
   workflow_dispatch: {}
 
 jobs:

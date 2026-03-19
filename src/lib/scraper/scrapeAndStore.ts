@@ -2,6 +2,7 @@ import { z } from "zod";
 import { fetchHtml } from "./fetchHtml";
 import { parseHtml } from "./parseHtml";
 import { parseRoute } from "./parseRoute";
+import { hashContent } from "./contentHash";
 import { geocodeWithCache } from "@/lib/geocoder/geocodeWithCache";
 import { getDirectionsPolyline } from "@/lib/geocoder/directions";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -43,11 +44,25 @@ export async function scrapeAndStore(): Promise<{
   geocoded: number;
   translated: number;
   errors: string[];
+  skipped: boolean;
 }> {
   const errors: string[] = [];
 
   // 1. Fetch HTML
   const html = await fetchHtml();
+
+  // 1b. Check if content has changed since last scrape
+  const supabase = createAdminClient();
+  const currentHash = hashContent(html);
+  const { data: hashRow } = await supabase
+    .from("scrape_metadata")
+    .select("value")
+    .eq("key", "last_html_hash")
+    .single();
+
+  if (hashRow?.value === currentHash) {
+    return { total: 0, geocoded: 0, translated: 0, errors: [], skipped: true };
+  }
 
   // 2. Parse
   const rawDemos = parseHtml(html);
@@ -69,8 +84,6 @@ export async function scrapeAndStore(): Promise<{
       errors.push(`Invalid row: ${JSON.stringify(result.error.issues)}`);
     }
   }
-
-  const supabase = createAdminClient();
 
   // 5. Deduplicate by natural key, then bulk upsert WITHOUT geocoding (fast)
   const now = new Date().toISOString();
@@ -206,5 +219,10 @@ export async function scrapeAndStore(): Promise<{
     }
   }
 
-  return { total: validDemos.length, geocoded, translated, errors };
+  // 8. Store content hash for next run
+  await supabase
+    .from("scrape_metadata")
+    .upsert({ key: "last_html_hash", value: currentHash, updated_at: new Date().toISOString() }, { onConflict: "key" });
+
+  return { total: validDemos.length, geocoded, translated, errors, skipped: false };
 }
