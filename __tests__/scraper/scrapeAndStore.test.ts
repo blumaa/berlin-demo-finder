@@ -57,6 +57,14 @@ const mockTranslationSelectChain = {
   }),
 };
 
+// Mock for scrape_metadata: always return no match so scrape proceeds
+const mockMetadataUpsert = jest.fn().mockResolvedValue({ error: null });
+const mockMetadataSelectChain = {
+  eq: jest.fn().mockReturnValue({
+    single: jest.fn().mockResolvedValue({ data: null, error: null }),
+  }),
+};
+
 jest.mock("@/lib/supabase/admin", () => ({
   createAdminClient: () => ({
     from: (table: string) => {
@@ -76,6 +84,12 @@ jest.mock("@/lib/supabase/admin", () => ({
         return {
           upsert: mockTranslationUpsert,
           select: mockTranslationSelectChain.select,
+        };
+      }
+      if (table === "scrape_metadata") {
+        return {
+          upsert: mockMetadataUpsert,
+          select: jest.fn().mockReturnValue(mockMetadataSelectChain),
         };
       }
       return { upsert: mockUpsert };
