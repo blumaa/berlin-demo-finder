@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ReactNode, useCallback, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { useFilterState, useFilterActions } from "@/contexts/FilterContext";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { getToday, getWeekRange } from "@/lib/datePresets";
@@ -12,6 +13,8 @@ interface NavProps {
 }
 
 export function Nav({ children }: NavProps) {
+  const pathname = usePathname();
+  const isMap = pathname === "/" || pathname === "";
   const { dateFrom, dateTo } = useFilterState();
   const { setDateFrom, setDateTo } = useFilterActions();
   const { t } = useTranslation();
@@ -83,10 +86,12 @@ export function Nav({ children }: NavProps) {
         </div>
       </nav>
       {/* Mobile only: pills floating over the map */}
-      <div className="fixed top-[54px] left-3 z-40 flex items-center gap-1.5 md:hidden">
-        {todayButton(isTodayActive, true)}
-        {weekButton(isWeekActive, true)}
-      </div>
+      {isMap && (
+        <div className="fixed top-[54px] left-3 z-40 flex items-center gap-1.5 md:hidden">
+          {todayButton(isTodayActive, true)}
+          {weekButton(isWeekActive, true)}
+        </div>
+      )}
     </>
   );
 }

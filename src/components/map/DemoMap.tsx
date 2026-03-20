@@ -202,6 +202,7 @@ export function DemoMap({
         onClick={handleClose}
         gestureHandling="greedy"
         zoomControl={true}
+        streetViewControl={false}
         mapTypeControlOptions={mapTypeControlOptions}
       >
         <MapInner

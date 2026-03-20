@@ -3,7 +3,6 @@
 import { Suspense, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { Demo } from "@/lib/types";
-import { useTranslation } from "@/contexts/LanguageContext";
 import { computeWeeklySummary } from "@/lib/analytics/weeklySummary";
 import { computePeakHours } from "@/lib/analytics/peakHours";
 import { computeTopicTrends } from "@/lib/analytics/topicTrends";
@@ -21,10 +20,10 @@ import { ChartSkeleton } from "@/components/ui/ChartSkeleton";
 
 interface AnalyticsDashboardProps {
   demos: Demo[];
+  lastUpdated?: string;
 }
 
-export function AnalyticsDashboard({ demos }: AnalyticsDashboardProps) {
-  const { t } = useTranslation();
+export function AnalyticsDashboard({ demos, lastUpdated }: AnalyticsDashboardProps) {
   const searchParams = useSearchParams();
 
   const dateFrom = searchParams.get("from") || "";
@@ -67,8 +66,20 @@ export function AnalyticsDashboard({ demos }: AnalyticsDashboardProps) {
     <div className="pt-14 pb-20 px-3 md:pt-16 md:pb-8 md:px-4 md:max-w-7xl md:mx-auto">
       <div className="mb-4 md:mb-6">
         <h1 className="text-lg font-semibold text-gray-900 mb-2 md:text-xl md:mb-3">
-          {t("analytics.title")}
+          Analytics
         </h1>
+        {lastUpdated && (
+          <p className="text-xs text-gray-500 mb-2">
+            Last updated:{" "}
+            {new Date(lastUpdated).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+        )}
         <DateRangeFilter />
       </div>
 

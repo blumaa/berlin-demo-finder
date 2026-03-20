@@ -27,7 +27,7 @@ export function AppShell({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
   );
 }
 
-function AppShellInner({ allDemos, cutoffDate }: AppShellProps) {
+function AppShellInner({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
   const pathname = usePathname();
   const isAnalytics = pathname === "/analytics";
   const isLogo = pathname === "/logo";
@@ -56,7 +56,7 @@ function AppShellInner({ allDemos, cutoffDate }: AppShellProps) {
       </div>
       <div className={isAnalytics && !isLogo ? "contents" : "hidden"}>
         <Suspense>
-          <AnalyticsDashboard demos={allDemos} />
+          <AnalyticsDashboard demos={allDemos} lastUpdated={lastUpdated} />
         </Suspense>
       </div>
       {isLogo && (
