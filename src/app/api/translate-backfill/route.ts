@@ -4,6 +4,7 @@ import { translateDemoTopics } from "@/lib/translation/translateDemo";
 import { SUPPORTED_LOCALES } from "@/i18n/types";
 import { fetchAllTranslatedDemoIds } from "@/lib/supabase/fetchAllTranslatedDemoIds";
 import { paginateQuery } from "@/lib/supabase/paginateQuery";
+import { verifyBearerToken } from "@/lib/auth/verifyBearerToken";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 const BATCH_SIZE = 20;
@@ -22,9 +23,8 @@ async function fetchAllDemos(
 
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  const expected = `Bearer ${process.env.CRON_SECRET}`;
 
-  if (!authHeader || authHeader !== expected) {
+  if (!verifyBearerToken(authHeader, process.env.CRON_SECRET ?? "")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -39,8 +39,11 @@ export async function POST(request: NextRequest) {
       fetchAllTranslatedDemoIds(supabase),
     ]);
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Translate-backfill error:", err);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 
   if (allDemos.length === 0) {
@@ -62,11 +65,12 @@ export async function POST(request: NextRequest) {
   if (translations.length > 0) {
     const { error: insertError } = await supabase
       .from("demo_translations")
-      .upsert(translations, { onConflict: "demo_id,locale" });
+      .upsert(translations as never[], { onConflict: "demo_id,locale" });
 
     if (insertError) {
+      console.error("Translation insert error:", insertError);
       return NextResponse.json(
-        { error: insertError.message },
+        { error: "Internal server error" },
         { status: 500 }
       );
     }

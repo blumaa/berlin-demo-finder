@@ -15,7 +15,7 @@ export async function geocodeWithCache(
     .from("geocode_cache")
     .select("lat, lng, formatted_address")
     .eq("address_key", addressKey)
-    .single();
+    .single() as { data: { lat: number; lng: number; formatted_address: string } | null };
 
   if (cached) {
     return {
@@ -35,7 +35,7 @@ export async function geocodeWithCache(
     lat: result.lat,
     lng: result.lng,
     formatted_address: result.formatted_address,
-  });
+  } as never);
 
   return result;
 }

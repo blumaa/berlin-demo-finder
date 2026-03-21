@@ -13,9 +13,18 @@ const CATEGORY_PATTERNS: [TopicCategory, RegExp][] = [
   ["Gender & LGBTQ+", /queer|pride|lgbtq|frauen|feminis/i],
 ];
 
+const categoryCache = new Map<string, TopicCategory>();
+
 export function classifyTopic(topic: string): TopicCategory {
+  const cached = categoryCache.get(topic);
+  if (cached) return cached;
+
   for (const [category, pattern] of CATEGORY_PATTERNS) {
-    if (pattern.test(topic)) return category;
+    if (pattern.test(topic)) {
+      categoryCache.set(topic, category);
+      return category;
+    }
   }
+  categoryCache.set(topic, "Other");
   return "Other";
 }

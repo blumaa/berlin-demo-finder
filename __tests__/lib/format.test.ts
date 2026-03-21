@@ -39,8 +39,8 @@ describe("formatLastUpdated", () => {
     expect(result).toBe("Jan 5, 09:05 UTC");
   });
 
-  it("produces identical output regardless of locale argument", () => {
+  it("produces consistent output for any timestamp", () => {
     const iso = "2025-06-20T08:15:00Z";
-    expect(formatLastUpdated(iso, "en")).toBe(formatLastUpdated(iso, "de"));
+    expect(formatLastUpdated(iso)).toBe("Jun 20, 08:15 UTC");
   });
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import useSWR from "swr";
+import { useQuery } from "@tanstack/react-query";
 import type { Demo } from "@/lib/types";
 import type { Locale } from "@/i18n/types";
 
@@ -9,22 +9,27 @@ export interface TranslatedDemo extends Demo {
   originalTopic: string;
 }
 
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
+async function fetchTranslations(
+  locale: string
+): Promise<Record<string, string>> {
+  const res = await fetch(`/api/translations?locale=${locale}`);
+  if (!res.ok) throw new Error("Failed to fetch translations");
+  return res.json();
+}
 
 export function useTranslatedDemos(
   demos: Demo[],
   locale: Locale
 ): TranslatedDemo[] {
-  const { data: translations } = useSWR<Record<string, string>>(
-    locale !== "de" ? `/api/translations?locale=${locale}` : null,
-    fetcher,
-    { revalidateOnFocus: false }
-  );
+  const { data: translations } = useQuery({
+    queryKey: ["translations", locale],
+    queryFn: () => fetchTranslations(locale),
+    enabled: locale !== "de",
+    refetchOnWindowFocus: false,
+  });
 
   return useMemo(() => {
-    // When German or no translations loaded yet, add originalTopic only if needed
     if (locale === "de" || !translations) {
-      // Only create new objects if demos don't already have originalTopic
       if (demos.length > 0 && "originalTopic" in demos[0]) {
         return demos as TranslatedDemo[];
       }
@@ -34,7 +39,6 @@ export function useTranslatedDemos(
     return demos.map((d) => {
       const translated = translations[d.id];
       if (!translated || translated === d.topic) {
-        // No translation or same text — reuse with originalTopic
         return { ...d, originalTopic: d.topic };
       }
       return {

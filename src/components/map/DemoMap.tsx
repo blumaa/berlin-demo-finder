@@ -305,7 +305,7 @@ function MapInner({
       (i) => i.type === "event" && i.demo.id === selectedDemo.id
     );
     return found && found.type === "event" ? found.category : "Other";
-  }, [selectedDemo?.id, items]);
+  }, [selectedDemo, items]);
 
   return (
     <>

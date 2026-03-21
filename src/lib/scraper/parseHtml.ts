@@ -6,6 +6,15 @@ function convertDate(dateStr: string): string {
   return `${year}-${month}-${day}`;
 }
 
+const MAX_FIELD_LENGTH = 500;
+
+function sanitize(text: string): string {
+  return text
+    .replace(/<[^>]*>/g, "")
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "")
+    .slice(0, MAX_FIELD_LENGTH);
+}
+
 export function parseHtml(html: string): RawScrapedDemo[] {
   if (!html) return [];
 
@@ -23,9 +32,9 @@ export function parseHtml(html: string): RawScrapedDemo[] {
     const dateRaw = $(cells[0]).text().trim();
     const timeFrom = $(cells[1]).text().trim();
     const timeTo = $(cells[2]).text().trim();
-    const topic = $(cells[3]).text().trim();
+    const topic = sanitize($(cells[3]).text().trim());
     const plz = $(cells[4]).text().trim();
-    const location = $(cells[5]).text().trim();
+    const location = sanitize($(cells[5]).text().trim());
     const routeText = $(cells[6]).text().trim();
 
     if (!dateRaw || !timeFrom || !topic) return;

@@ -6,6 +6,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useMemo,
   type ReactNode,
 } from "react";
 import type { Locale, TranslationKey } from "@/i18n/types";
@@ -35,20 +36,14 @@ function detectClientLocale(): Locale {
   return "en";
 }
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
-  const [dict, setDict] = useState(() => getDictionary("en"));
-  const [hydrated, setHydrated] = useState(false);
+function getInitialLocale(): Locale {
+  if (typeof window === "undefined") return "en";
+  return detectClientLocale();
+}
 
-  useEffect(() => {
-    if (!hydrated) {
-      const clientLocale = detectClientLocale();
-      if (clientLocale !== "en") {
-        setLocaleState(clientLocale);
-      }
-      setHydrated(true);
-    }
-  }, [hydrated]);
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [locale, setLocaleState] = useState<Locale>(getInitialLocale);
+  const [dict, setDict] = useState(() => getDictionary(getInitialLocale()));
 
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
@@ -69,8 +64,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     [dict]
   );
 
+  const value = useMemo(
+    () => ({ locale, setLocale, t }),
+    [locale, setLocale, t]
+  );
+
   return (
-    <LanguageContext.Provider value={{ locale, setLocale, t }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );
@@ -80,10 +80,4 @@ export function useTranslation(): LanguageContextValue {
   const ctx = useContext(LanguageContext);
   if (!ctx) throw new Error("useTranslation must be used within LanguageProvider");
   return ctx;
-}
-
-/** @deprecated Use useTranslation() instead */
-export function useLanguage(): { language: Locale; setLanguage: (l: Locale) => void } {
-  const { locale, setLocale } = useTranslation();
-  return { language: locale, setLanguage: setLocale };
 }

@@ -54,6 +54,37 @@ describe("paginateQuery", () => {
     expect(queryFn).toHaveBeenCalledWith(50, 99);
   });
 
+  it("stops at maxRows limit", async () => {
+    const page1 = Array.from({ length: 1000 }, (_, i) => ({ id: `${i}` }));
+    const page2 = Array.from({ length: 1000 }, (_, i) => ({ id: `${1000 + i}` }));
+    const page3 = Array.from({ length: 1000 }, (_, i) => ({ id: `${2000 + i}` }));
+
+    const queryFn = jest
+      .fn()
+      .mockResolvedValueOnce({ data: page1, error: null })
+      .mockResolvedValueOnce({ data: page2, error: null })
+      .mockResolvedValueOnce({ data: page3, error: null });
+
+    const result = await paginateQuery(queryFn, 1000, 1500);
+    expect(result).toHaveLength(1500);
+    expect(queryFn).toHaveBeenCalledTimes(2);
+  });
+
+  it("uses default maxRows of 10000", async () => {
+    const pages = Array.from({ length: 11 }, () =>
+      Array.from({ length: 1000 }, (_, i) => ({ id: `${i}` }))
+    );
+
+    const queryFn = jest.fn();
+    pages.forEach((page) => {
+      queryFn.mockResolvedValueOnce({ data: page, error: null });
+    });
+
+    const result = await paginateQuery(queryFn);
+    expect(result).toHaveLength(10000);
+    expect(queryFn).toHaveBeenCalledTimes(10);
+  });
+
   it("throws on error", async () => {
     const queryFn = jest
       .fn()

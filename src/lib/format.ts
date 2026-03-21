@@ -23,7 +23,7 @@ const MONTH_NAMES_SHORT: Record<string, string[]> = {
   de: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
 };
 
-export function formatLastUpdated(iso: string, _locale: string = "en"): string {
+export function formatLastUpdated(iso: string): string {
   const date = new Date(iso);
   const months = MONTH_NAMES_SHORT["en"];
   const month = months[date.getUTCMonth()];

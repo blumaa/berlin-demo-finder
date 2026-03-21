@@ -58,7 +58,7 @@ export async function scrapeAndStore(): Promise<{
     .from("scrape_metadata")
     .select("value")
     .eq("key", "last_html_hash")
-    .single();
+    .single() as { data: { value: string } | null };
 
   if (hashRow?.value === currentHash) {
     return { total: 0, geocoded: 0, translated: 0, errors: [], skipped: true };
@@ -110,7 +110,7 @@ export async function scrapeAndStore(): Promise<{
     const chunk = rows.slice(i, i + 500);
     const { error } = await supabase
       .from("demos")
-      .upsert(chunk, { onConflict: "date,time_from,topic,plz" });
+      .upsert(chunk as never[], { onConflict: "date,time_from,topic,plz" });
     if (error) {
       errors.push(`Bulk upsert error (chunk ${i}): ${error.message}`);
     }
@@ -122,7 +122,7 @@ export async function scrapeAndStore(): Promise<{
     .select("id, location, plz, route_text")
     .is("lat", null)
     .neq("location", "")
-    .limit(200); // Cap per run to avoid API quota issues
+    .limit(200) as { data: { id: string; location: string; plz: string; route_text: string | null }[] | null };
 
   let geocoded = 0;
 
@@ -168,7 +168,7 @@ export async function scrapeAndStore(): Promise<{
           lat: geo.lat,
           lng: geo.lng,
           route_json: routeJson,
-        })
+        } as never)
         .eq("id", demo.id);
 
       if (error) {
@@ -186,7 +186,7 @@ export async function scrapeAndStore(): Promise<{
       .from("demos")
       .select("id, topic")
       .order("created_at", { ascending: false })
-      .limit(TRANSLATE_BATCH_SIZE * 2),
+      .limit(TRANSLATE_BATCH_SIZE * 2) as unknown as Promise<{ data: { id: string; topic: string }[] | null }>,
     fetchAllTranslatedDemoIds(supabase),
   ]);
 
@@ -204,7 +204,7 @@ export async function scrapeAndStore(): Promise<{
       if (translations.length > 0) {
         const { error: insertError } = await supabase
           .from("demo_translations")
-          .upsert(translations, { onConflict: "demo_id,locale" });
+          .upsert(translations as never[], { onConflict: "demo_id,locale" });
 
         if (insertError) {
           errors.push(`Translation insert error: ${insertError.message}`);
@@ -222,7 +222,7 @@ export async function scrapeAndStore(): Promise<{
   // 8. Store content hash for next run
   await supabase
     .from("scrape_metadata")
-    .upsert({ key: "last_html_hash", value: currentHash, updated_at: new Date().toISOString() }, { onConflict: "key" });
+    .upsert({ key: "last_html_hash", value: currentHash, updated_at: new Date().toISOString() } as never, { onConflict: "key" });
 
   return { total: validDemos.length, geocoded, translated, errors, skipped: false };
 }
