@@ -1,60 +1,57 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
 
-export const metadata: Metadata = {
-  title: "About — Berlin Demo Finder",
-};
+import Link from "next/link";
+import { useTranslation } from "@/contexts/LanguageContext";
+
+const POLICE_URL =
+  "https://www.berlin.de/polizei/service/versammlungsbehoerde/versammlungen-aufzuege/";
+const CONTACT_EMAIL = "desmond.blume@gmail.com";
 
 export default function AboutPage() {
+  const { t } = useTranslation();
+
   return (
     <main className="max-w-xl mx-auto px-4 py-12">
       <Link href="/" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">
-        &larr; Back to map
+        &larr; {t("nav.backToMap")}
       </Link>
 
-      <h1 className="text-2xl font-bold mt-6 mb-4">About Berlin Demo Finder</h1>
+      <h1 className="text-2xl font-bold mt-6 mb-4">{t("about.title")}</h1>
 
       <div className="space-y-4 text-gray-700 text-sm leading-relaxed">
-        <p>
-          Berlin Demo Finder is an interactive map that shows upcoming public
-          assemblies and demonstrations in Berlin. It helps residents and
-          visitors quickly see what&apos;s happening and where.
-        </p>
+        <p>{t("about.description")}</p>
 
-        <h2 className="text-lg font-semibold text-gray-900 pt-2">Data source</h2>
+        <h2 className="text-lg font-semibold text-gray-900 pt-2">{t("about.dataSourceTitle")}</h2>
         <p>
-          All data comes from the{" "}
+          {t("about.dataSourceText").split("{link}")[0]}
           <a
-            href="https://www.berlin.de/polizei/service/versammlungsbehoerde/versammlungen-aufzuege/"
+            href={POLICE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 underline hover:text-blue-800"
           >
-            Berlin Police assembly registry
+            {t("about.dataSourceLink")}
           </a>
-          , a publicly available government resource listing registered
-          assemblies in Berlin.
+          {t("about.dataSourceText").split("{link}")[1]}
         </p>
 
-        <h2 className="text-lg font-semibold text-gray-900 pt-2">Collection frequency</h2>
-        <p>
-          The data is automatically collected twice per week. Listings are
-          geocoded and categorized before being displayed on the map.
-        </p>
+        <h2 className="text-lg font-semibold text-gray-900 pt-2">{t("about.frequencyTitle")}</h2>
+        <p>{t("about.frequencyText")}</p>
 
-        <h2 className="text-lg font-semibold text-gray-900 pt-2">Contact</h2>
+        <h2 className="text-lg font-semibold text-gray-900 pt-2">{t("about.contactTitle")}</h2>
         <p>
-          Questions or feedback? Reach out at{" "}
+          {t("about.contactText").split("{email}")[0]}
           <a
-            href="mailto:desmond.blume@gmail.com"
+            href={`mailto:${CONTACT_EMAIL}`}
             className="text-blue-600 underline hover:text-blue-800"
           >
-            desmond.blume@gmail.com
+            {CONTACT_EMAIL}
           </a>
+          {t("about.contactText").split("{email}")[1]}
         </p>
       </div>
 
-      <p className="mt-10 text-xs text-gray-400">&copy; 2026 Berlin Demo Finder</p>
+      <p className="mt-10 text-xs text-gray-400">{t("about.copyright")}</p>
     </main>
   );
 }

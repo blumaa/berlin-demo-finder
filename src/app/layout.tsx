@@ -6,6 +6,7 @@ import { AppShell } from "@/components/AppShell";
 import { Demo } from "@/lib/types";
 import { paginateQuery } from "@/lib/supabase/paginateQuery";
 import { Analytics } from "@vercel/analytics/next";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,8 +61,10 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <AppShell allDemos={allDemos} lastUpdated={lastUpdated} cutoffDate={cutoffDate} />
-        {children}
+        <LanguageProvider>
+          <AppShell allDemos={allDemos} lastUpdated={lastUpdated} cutoffDate={cutoffDate} />
+          {children}
+        </LanguageProvider>
         <Analytics />
       </body>
     </html>

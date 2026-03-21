@@ -1,5 +1,14 @@
 import React, { ReactElement, ReactNode } from "react";
 import PrivacyPage from "@/app/privacy/page";
+import en from "@/i18n/dictionaries/en";
+
+jest.mock("@/contexts/LanguageContext", () => ({
+  useTranslation: () => ({
+    locale: "en",
+    setLocale: jest.fn(),
+    t: (key: string) => (en as Record<string, string>)[key] ?? key,
+  }),
+}));
 
 function extractText(node: ReactNode): string {
   if (node == null || typeof node === "boolean") return "";

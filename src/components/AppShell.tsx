@@ -6,7 +6,7 @@ import { Demo, TopicCategory, EventType, CATEGORY_CONFIG, ALL_CATEGORIES, CATEGO
 import { MapPageClient } from "@/components/map/MapPageClient";
 import { AnalyticsDashboard } from "@/app/analytics/AnalyticsDashboard";
 import { Nav } from "@/components/ui/Nav";
-import { LanguageProvider, useTranslation } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/contexts/LanguageContext";
 import { FilterProvider, useFilterState, useFilterActions } from "@/contexts/FilterContext";
 import { SUPPORTED_LOCALES, LOCALE_NAMES, type Locale } from "@/i18n";
 import { GlobeIcon, ChevronUpIcon, LayersIcon, EllipsisVerticalIcon } from "@/components/ui/icons";
@@ -20,11 +20,9 @@ interface AppShellProps {
 
 export function AppShell({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
   return (
-    <LanguageProvider>
-      <FilterProvider>
-        <AppShellInner allDemos={allDemos} lastUpdated={lastUpdated} cutoffDate={cutoffDate} />
-      </FilterProvider>
-    </LanguageProvider>
+    <FilterProvider>
+      <AppShellInner allDemos={allDemos} lastUpdated={lastUpdated} cutoffDate={cutoffDate} />
+    </FilterProvider>
   );
 }
 
@@ -247,6 +245,7 @@ function LegendDropdown({
 function InfoMenu() {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!open) return;
@@ -277,14 +276,14 @@ function InfoMenu() {
             onClick={() => setOpen(false)}
             className="block w-full text-start px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors min-h-[44px] flex items-center"
           >
-            About
+            {t("nav.about")}
           </Link>
           <Link
             href="/privacy"
             onClick={() => setOpen(false)}
             className="block w-full text-start px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors min-h-[44px] flex items-center"
           >
-            Privacy
+            {t("nav.privacy")}
           </Link>
         </div>
       )}
