@@ -85,6 +85,16 @@ export function GlobeIcon({ size = 16, className = "text-gray-600 group-hover:te
   );
 }
 
+export function EllipsisVerticalIcon({ size = 16, className = "text-gray-700" }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <circle cx="12" cy="5" r="2" />
+      <circle cx="12" cy="12" r="2" />
+      <circle cx="12" cy="19" r="2" />
+    </svg>
+  );
+}
+
 export function LayersIcon({ size = 15, className = "text-gray-700" }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>

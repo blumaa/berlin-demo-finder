@@ -61,8 +61,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <AppShell allDemos={allDemos} lastUpdated={lastUpdated} cutoffDate={cutoffDate} />
-        {/* children kept for Next.js routing — pages return null */}
-        <div className="hidden">{children}</div>
+        {children}
         <Analytics />
       </body>
     </html>

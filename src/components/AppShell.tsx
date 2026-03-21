@@ -9,7 +9,8 @@ import { Nav } from "@/components/ui/Nav";
 import { LanguageProvider, useTranslation } from "@/contexts/LanguageContext";
 import { FilterProvider, useFilterState, useFilterActions } from "@/contexts/FilterContext";
 import { SUPPORTED_LOCALES, LOCALE_NAMES, type Locale } from "@/i18n";
-import { GlobeIcon, ChevronUpIcon, LayersIcon } from "@/components/ui/icons";
+import { GlobeIcon, ChevronUpIcon, LayersIcon, EllipsisVerticalIcon } from "@/components/ui/icons";
+import Link from "next/link";
 
 interface AppShellProps {
   allDemos: Demo[];
@@ -31,6 +32,7 @@ function AppShellInner({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
   const pathname = usePathname();
   const isAnalytics = pathname === "/analytics";
   const isLogo = pathname === "/logo";
+  const isStandalonePage = pathname === "/about" || pathname === "/privacy";
   const { locale, setLocale, t } = useTranslation();
   const { categories, eventTypes } = useFilterState();
   const { toggleCategory, toggleEventType } = useFilterActions();
@@ -41,20 +43,27 @@ function AppShellInner({ allDemos, lastUpdated, cutoffDate }: AppShellProps) {
 
   const filterCount = categories.length + eventTypes.length;
 
+  const showMap = !isAnalytics && !isLogo && !isStandalonePage;
+  const showAnalytics = isAnalytics && !isLogo;
+  const showLegend = showMap;
+
   return (
     <>
       <Nav>
         {/* Language picker */}
         <LanguagePicker locale={locale} setLocale={setLocale} />
 
+        {/* Info menu */}
+        <InfoMenu />
+
         {/* Legend toggle — only on map view */}
-        {!isAnalytics && <LegendDropdown t={t} filterCount={filterCount} categories={categories} eventTypes={eventTypes} toggleCategory={toggleCategory} toggleEventType={toggleEventType} />}
+        {showLegend && <LegendDropdown t={t} filterCount={filterCount} categories={categories} eventTypes={eventTypes} toggleCategory={toggleCategory} toggleEventType={toggleEventType} />}
       </Nav>
 
-      <div className={isAnalytics || isLogo ? "hidden" : "contents"}>
+      <div className={showMap ? "contents" : "hidden"}>
         <MapPageClient demos={mapDemos} />
       </div>
-      <div className={isAnalytics && !isLogo ? "contents" : "hidden"}>
+      <div className={showAnalytics ? "contents" : "hidden"}>
         <Suspense>
           <AnalyticsDashboard demos={allDemos} lastUpdated={lastUpdated} />
         </Suspense>
@@ -229,6 +238,54 @@ function LegendDropdown({
               );
             })}
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function InfoMenu() {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <button
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-label="More info"
+        className="flex items-center justify-center px-2 py-1 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors focus-visible:ring-2 focus-visible:ring-blue-600"
+      >
+        <EllipsisVerticalIcon size={16} />
+      </button>
+
+      {open && (
+        <div className="absolute top-full end-0 mt-1.5 bg-white rounded-xl shadow-lg border border-gray-200 py-1 min-w-[140px] z-50">
+          <Link
+            href="/about"
+            onClick={() => setOpen(false)}
+            className="block w-full text-start px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors min-h-[44px] flex items-center"
+          >
+            About
+          </Link>
+          <Link
+            href="/privacy"
+            onClick={() => setOpen(false)}
+            className="block w-full text-start px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors min-h-[44px] flex items-center"
+          >
+            Privacy
+          </Link>
         </div>
       )}
     </div>
