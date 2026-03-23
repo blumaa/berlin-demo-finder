@@ -54,6 +54,38 @@ describe("fetchAllTranslatedDemoIds", () => {
     expect(result.has("id-501")).toBe(true);
   });
 
+  it("handles more than 10k translation rows without truncation", async () => {
+    // With 2000 demos × 11 locales = 22,000 rows
+    // paginateQuery maxRows=10,000 would truncate at ~909 unique demos
+    // This test verifies all unique demo IDs are returned
+    const totalDemos = 2000;
+    const localesPerDemo = 11;
+    const pageSize = 1000;
+    const totalRows = totalDemos * localesPerDemo; // 22,000
+
+    // Build pages of 1000 rows each
+    const pages: { demo_id: string }[][] = [];
+    let rowIndex = 0;
+    while (rowIndex < totalRows) {
+      const page: { demo_id: string }[] = [];
+      for (let j = 0; j < pageSize && rowIndex < totalRows; j++, rowIndex++) {
+        const demoIndex = Math.floor(rowIndex / localesPerDemo);
+        page.push({ demo_id: `demo-${demoIndex}` });
+      }
+      pages.push(page);
+    }
+    // Empty page to signal end of pagination
+    pages.push([]);
+
+    const supabase = createMockSupabase(pages);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await fetchAllTranslatedDemoIds(supabase as any);
+
+    expect(result.size).toBe(totalDemos);
+    expect(result.has("demo-0")).toBe(true);
+    expect(result.has(`demo-${totalDemos - 1}`)).toBe(true);
+  });
+
   it("throws on supabase error", async () => {
     const mockQuery = {
       select: jest.fn().mockReturnThis(),

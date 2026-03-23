@@ -10,11 +10,15 @@ import { paginateQuery } from "./paginateQuery";
 export async function fetchAllTranslatedDemoIds(
   supabase: SupabaseClient
 ): Promise<Set<string>> {
-  const rows = await paginateQuery<{ demo_id: string }>((from, to) =>
-    supabase
-      .from("demo_translations")
-      .select("demo_id")
-      .range(from, to)
+  // 2,237 demos × 11 locales = ~25k rows; default maxRows of 10k truncates
+  const rows = await paginateQuery<{ demo_id: string }>(
+    (from, to) =>
+      supabase
+        .from("demo_translations")
+        .select("demo_id")
+        .range(from, to),
+    1000,
+    50000
   );
 
   return new Set(rows.map((row) => row.demo_id));
