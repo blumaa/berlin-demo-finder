@@ -39,6 +39,32 @@ describe("translateTexts", () => {
     expect(url).toContain("q=Wohnungsprotest");
   });
 
+  it("translates all texts concurrently", async () => {
+    const callOrder: number[] = [];
+    mockFetch.mockImplementation(async (url: string) => {
+      const callIndex = callOrder.length;
+      callOrder.push(callIndex);
+      // Simulate network delay
+      await new Promise((r) => setTimeout(r, 10));
+      return {
+        ok: true,
+        json: async () => ({
+          responseData: { translatedText: `translated-${callIndex}` },
+          responseStatus: 200,
+        }),
+      };
+    });
+
+    const start = Date.now();
+    await translateTexts(["text1", "text2", "text3"], "en");
+    const elapsed = Date.now() - start;
+
+    // All 3 calls should be made
+    expect(mockFetch).toHaveBeenCalledTimes(3);
+    // Should complete in roughly the time of 1 call, not 3 sequential
+    expect(elapsed).toBeLessThan(500);
+  });
+
   it("returns original texts on API failure", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: false,

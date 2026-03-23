@@ -9,7 +9,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const maxDuration = 60;
 
-const BATCH_SIZE = 4;
+const BATCH_SIZE = 20;
 
 async function fetchAllDemos(
   supabase: SupabaseClient

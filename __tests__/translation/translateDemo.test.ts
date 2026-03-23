@@ -62,7 +62,7 @@ describe("translateDemoTopics", () => {
     expect(mockTranslateTexts).not.toHaveBeenCalled();
   });
 
-  it("makes one API call per locale with all topics batched", async () => {
+  it("translates all locales in parallel with all topics batched", async () => {
     mockTranslateTexts.mockResolvedValue(["t1", "t2"]);
 
     const locales: Locale[] = ["en", "fr", "de"];

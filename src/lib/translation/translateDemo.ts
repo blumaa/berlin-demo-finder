@@ -12,19 +12,17 @@ export async function translateDemoTopics(
   if (targetLocales.length === 0) return [];
 
   const topics = demos.map((d) => d.topic);
-  const results: DemoTranslation[] = [];
 
-  for (const locale of targetLocales) {
-    const translated = await translateTexts(topics, locale, "de");
-
-    for (let i = 0; i < demos.length; i++) {
-      results.push({
-        demo_id: demos[i].id,
+  const allResults = await Promise.all(
+    targetLocales.map(async (locale) => {
+      const translated = await translateTexts(topics, locale, "de");
+      return demos.map((demo, i) => ({
+        demo_id: demo.id,
         locale,
         topic: translated[i],
-      });
-    }
-  }
+      }));
+    })
+  );
 
-  return results;
+  return allResults.flat();
 }
