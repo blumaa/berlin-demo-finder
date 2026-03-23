@@ -9,19 +9,80 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger scrape endpoint
+      - name: Scrape and upsert
         run: |
-          curl -f -X POST "${{ secrets.SCRAPE_API_URL }}" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json"
+          max_retries=3
+          attempt=0
+          while [ $attempt -lt $max_retries ]; do
+            http_code=$(curl -s -o /tmp/scrape_response.json -w "%{http_code}" \
+              -X POST "${{ secrets.SCRAPE_API_URL }}" \
+              -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+              -H "Content-Type: application/json")
+            if [ "$http_code" -eq 200 ]; then
+              echo "Scrape succeeded:"
+              cat /tmp/scrape_response.json
+              echo ""
+              break
+            fi
+            attempt=$((attempt + 1))
+            echo "Scrape attempt $attempt failed (HTTP $http_code), retrying in 10s..."
+            sleep 10
+          done
+          if [ $attempt -eq $max_retries ]; then
+            echo "Scrape failed after $max_retries attempts"
+            exit 1
+          fi
+
+      - name: Backfill geocoding
+        run: |
+          remaining=1
+          failures=0
+          max_failures=5
+          while [ "$remaining" -gt 0 ] && [ "$failures" -lt "$max_failures" ]; do
+            http_code=$(curl -s -o /tmp/geo_response.json -w "%{http_code}" \
+              -X POST "${{ secrets.APP_BASE_URL }}/api/geocode-backfill" \
+              -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+              -H "Content-Type: application/json")
+            if [ "$http_code" -eq 200 ]; then
+              remaining=$(jq -r '.remaining // 0' /tmp/geo_response.json)
+              geocoded=$(jq -r '.geocoded // 0' /tmp/geo_response.json)
+              echo "Geocoded $geocoded, remaining: $remaining"
+              failures=0
+            else
+              failures=$((failures + 1))
+              echo "Geocode attempt failed (HTTP $http_code, $failures/$max_failures), retrying in 10s..."
+              sleep 10
+            fi
+            sleep 2
+          done
+          if [ "$failures" -ge "$max_failures" ]; then
+            echo "Geocoding failed after $max_failures consecutive failures"
+            exit 1
+          fi
+
       - name: Backfill translations
         run: |
           remaining=1
-          while [ "$remaining" -gt 0 ]; do
-            response=$(curl -sf -X POST "${{ secrets.APP_BASE_URL }}/api/translate-backfill" \
+          failures=0
+          max_failures=5
+          while [ "$remaining" -gt 0 ] && [ "$failures" -lt "$max_failures" ]; do
+            http_code=$(curl -s -o /tmp/translate_response.json -w "%{http_code}" \
+              -X POST "${{ secrets.APP_BASE_URL }}/api/translate-backfill" \
               -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
               -H "Content-Type: application/json")
-            remaining=$(echo "$response" | jq -r '.remaining // 0')
-            echo "Translated batch, remaining: $remaining"
+            if [ "$http_code" -eq 200 ]; then
+              remaining=$(jq -r '.remaining // 0' /tmp/translate_response.json)
+              translated=$(jq -r '.translated // 0' /tmp/translate_response.json)
+              echo "Translated $translated, remaining: $remaining"
+              failures=0
+            else
+              failures=$((failures + 1))
+              echo "Translate attempt failed (HTTP $http_code, $failures/$max_failures), retrying in 10s..."
+              sleep 10
+            fi
             sleep 2
           done
+          if [ "$failures" -ge "$max_failures" ]; then
+            echo "Translation failed after $max_failures consecutive failures"
+            exit 1
+          fi

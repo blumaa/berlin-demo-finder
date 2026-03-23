@@ -4,8 +4,8 @@ import { NextRequest } from "next/server";
 jest.mock("@/lib/scraper/scrapeAndStore", () => ({
   scrapeAndStore: jest.fn().mockResolvedValue({
     total: 5,
-    geocoded: 3,
     errors: [],
+    skipped: false,
   }),
 }));
 

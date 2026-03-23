@@ -7,7 +7,9 @@ import { paginateQuery } from "@/lib/supabase/paginateQuery";
 import { verifyBearerToken } from "@/lib/auth/verifyBearerToken";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-const BATCH_SIZE = 20;
+export const maxDuration = 60;
+
+const BATCH_SIZE = 4;
 
 async function fetchAllDemos(
   supabase: SupabaseClient

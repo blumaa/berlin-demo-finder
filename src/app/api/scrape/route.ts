@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { scrapeAndStore } from "@/lib/scraper/scrapeAndStore";
 import { verifyBearerToken } from "@/lib/auth/verifyBearerToken";
 
+export const maxDuration = 60;
+
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
 
